@@ -74,11 +74,12 @@ class FacetListMultiIndexSearcherConnectionTests: XCTestCase {
                        isConnected: Bool) {
     
     var response1 = SearchResponse(hits: [TestRecord<Int>]())
-    response1.disjunctiveFacets = ["a": .init(prefix: "a", count: 4)]
+    let response1Facets: [Facet] = .init(prefix: "a", count: 4)
+    response1.disjunctiveFacets = [attribute: response1Facets]
     
     var response2 = SearchResponse(hits: [TestRecord<String>]())
-    response1.disjunctiveFacets = ["b": .init(prefix: "b", count: 5)]
-    
+    response2.disjunctiveFacets = ["b": .init(prefix: "b", count: 5)]
+
     do {
       let response = try SearchesResponse(json: ["results": [try JSON(response1), try JSON(response2)]])
 
@@ -86,7 +87,7 @@ class FacetListMultiIndexSearcherConnectionTests: XCTestCase {
       onItemsChangedExpectation.isInverted = !isConnected
 
       interactor.onItemsChanged.subscribe(with: self) { (test, facets) in
-        XCTAssertEqual(Set(response1.facets), Set(facets))
+        XCTAssertEqual(Set(response1Facets), Set(facets))
         onItemsChangedExpectation.fulfill()
       }
 
