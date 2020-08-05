@@ -17,6 +17,7 @@ let package = Package(
             targets: ["InstantSearch", "InstantSearchCore"]),
         .library(
             name: "InstantSearchCore",
+            type: .dynamic,
             targets: ["InstantSearchCore"])
     ],
     dependencies: [
